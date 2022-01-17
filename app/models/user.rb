@@ -102,7 +102,7 @@ class User < ApplicationRecord
     query = <<-SQL
     SELECT *
     FROM users
-    WHERE name LIKE "%#{name}%"
+    WHERE name LIKE '%#{name}%'
     SQL
     result = User.find_by_sql(query)
     # result = ActiveRecord::Base.connection.execute(query)
