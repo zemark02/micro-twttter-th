@@ -86,15 +86,15 @@
                         -if(!Like.find_by(user_id:@user.id,post_id:p.id))
                           %a.nav-link{ }
                             = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
-                              %span.bi.bi-heart.img-sm{style:"font-size:1em"}
+                              %span.bi.bi-heart.img-sm{style:"font-size:2.5em"}
                         -else
                           %a.nav-link{ }
                             = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
-                              %span.bi.bi-heart-fill.img-sm{style:"font-size:1em;color:red ;"}
+                              %span.bi.bi-heart-fill.img-sm{style:"font-size:2.5em;color:red ;"}
                       .col.ps-0{style:"text-align:center"}
                         %a.nav-link{ }
                           = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
-                            %span.bi.bi-chat.img-sm{style:"font-size:1em"}
+                            %span.bi.bi-chat.img-sm{style:"font-size:2.5em"}
                     %hr.mt-0
                     %div.row
                       %div.col-2.mt-2
@@ -135,14 +135,14 @@
                               -c = comment
                               -if(!LikeComment.find_by(user_id:@user.id,comment_id:c.id))
                                 = button_to updateLikeComment_url, method: :post ,class:"btn btn-link  p-0 m-0 " ,id:"btn-like" ,params: { comment_id:c.id} do
-                                  %span.bi.bi-hand-thumbs-up.img-sm{style:"font-size:0.5em"}
+                                  %span.bi.bi-hand-thumbs-up.img-sm{style:"font-size:1.5em"}
                                     -if (c.likes.count != 0)
                                       #{c.likes.count} Like this !
                                 %div{style:"margin-top:5px"}
                                   = " - #{getTime(c.updated_at)}"
                               -else
                                 = button_to updateLikeComment_url, method: :post ,class:"btn btn-link  p-0 m-0 " ,id:"btn-like" ,params: { comment_id:c.id} do
-                                  %span.bi.bi-hand-thumbs-up-fill.img-sm{style:"font-size:0.5em;color:#337ab7 ;"}
+                                  %span.bi.bi-hand-thumbs-up-fill.img-sm{style:"font-size:1.5em;color:#337ab7 ;"}
                                     -if (c.likes.count != 0)
                                       #{c.likes.count} Like this !
                                 %div{style:"margin-top:5px"}
@@ -231,15 +231,15 @@
                         -if(!Like.find_by(user_id:@user.id,post_id:p.id))
                           %a.nav-link{ }
                             = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
-                              %span.bi.bi-heart.img-sm{style:"font-size:1em"}
+                              %span.bi.bi-heart.img-sm{style:"font-size:2.5em"}
                         -else
                           %a.nav-link{ }
                             = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
-                              %span.bi.bi-heart-fill.img-sm{style:"font-size:1em;color:red ;"}
+                              %span.bi.bi-heart-fill.img-sm{style:"font-size:2.5em;color:red ;"}
                       .col.ps-0{style:"text-align:center"}
                         %a.nav-link{ }
                           = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
-                            %span.bi.bi-chat.img-sm{style:"font-size:1em"}
+                            %span.bi.bi-chat.img-sm{style:"font-size:2.5em"}
                     %hr.mt-0
                     %div.row
                       %div.col-2.mt-2
@@ -280,14 +280,14 @@
                               -c = comment
                               -if(!LikeComment.find_by(user_id:@user.id,comment_id:c.id))
                                 = button_to updateLikeComment_url, method: :post ,class:"btn btn-link  p-0 m-0 " ,id:"btn-like" ,params: { comment_id:c.id} do
-                                  %span.bi.bi-hand-thumbs-up.img-sm{style:"font-size:0.5em"}
+                                  %span.bi.bi-hand-thumbs-up.img-sm{style:"font-size:1.5em"}
                                     -if (c.likes.count != 0)
                                       #{c.likes.count} Like this !
                                 %div{style:"margin-top:5px"}
                                   = " - #{getTime(c.updated_at)}"
                               -else
                                 = button_to updateLikeComment_url, method: :post ,class:"btn btn-link  p-0 m-0 " ,id:"btn-like" ,params: { comment_id:c.id} do
-                                  %span.bi.bi-hand-thumbs-up-fill.img-sm{style:"font-size:0.5em;color:#337ab7 ;"}
+                                  %span.bi.bi-hand-thumbs-up-fill.img-sm{style:"font-size:1.5em;color:#337ab7 ;"}
                                     -if (c.likes.count != 0)
                                       #{c.likes.count} Like this !
                                 %div{style:"margin-top:5px"}
@@ -365,15 +365,15 @@
                         -if(!Like.find_by(user_id:@user.id,post_id:p.id))
                           %a.nav-link{ }
                             = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
-                              %span.bi.bi-heart.img-sm{style:"font-size:1em"}
+                              %span.bi.bi-heart.img-sm{style:"font-size:2.5em"}
                         -else
                           %a.nav-link{ }
                             = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
-                              %span.bi.bi-heart-fill.img-sm{style:"font-size:1em;color:red ;"}
+                              %span.bi.bi-heart-fill.img-sm{style:"font-size:2.5em;color:red ;"}
                       .col.ps-0{style:"text-align:center"}
                         %a.nav-link{ }
                           = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
-                            %span.bi.bi-chat.img-sm{style:"font-size:1em"}
+                            %span.bi.bi-chat.img-sm{style:"font-size:2.5em"}
                     %hr.mt-0
                     %div.row
                       %div.col-2.mt-2
@@ -414,14 +414,14 @@
                               -c = comment
                               -if(!LikeComment.find_by(user_id:@user.id,comment_id:c.id))
                                 = button_to updateLikeComment_url, method: :post ,class:"btn btn-link  p-0 m-0 " ,id:"btn-like" ,params: { comment_id:c.id} do
-                                  %span.bi.bi-hand-thumbs-up.img-sm{style:"font-size:0.5em"}
+                                  %span.bi.bi-hand-thumbs-up.img-sm{style:"font-size:1.5em"}
                                     -if (c.likes.count != 0)
                                       #{c.likes.count} Like this !
                                 %div{style:"margin-top:5px"}
                                   = " - #{getTime(c.updated_at)}"
                               -else
                                 = button_to updateLikeComment_url, method: :post ,class:"btn btn-link  p-0 m-0 " ,id:"btn-like" ,params: { comment_id:c.id} do
-                                  %span.bi.bi-hand-thumbs-up-fill.img-sm{style:"font-size:0.5em;color:#337ab7 ;"}
+                                  %span.bi.bi-hand-thumbs-up-fill.img-sm{style:"font-size:1.5em;color:#337ab7 ;"}
                                     -if (c.likes.count != 0)
                                       #{c.likes.count} Like this !
                                 %div{style:"margin-top:5px"}
@@ -493,15 +493,15 @@
                         -if(!Like.find_by(user_id:@user.id,post_id:p.id))
                           %a.nav-link{ }
                             = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
-                              %span.bi.bi-heart.img-sm{style:"font-size:1em"}
+                              %span.bi.bi-heart.img-sm{style:"font-size:2.5em"}
                         -else
                           %a.nav-link{ }
                             = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
-                              %span.bi.bi-heart-fill.img-sm{style:"font-size:1em;color:red ;"}
+                              %span.bi.bi-heart-fill.img-sm{style:"font-size:2.5em;color:red ;"}
                       .col.ps-0{style:"text-align:center"}
                         %a.nav-link{ }
                           = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
-                            %span.bi.bi-chat.img-sm{style:"font-size:1em"}
+                            %span.bi.bi-chat.img-sm{style:"font-size:2.5em"}
                     %hr.mt-0
                     %div.row
                       %div.col-2.mt-2
@@ -542,14 +542,14 @@
                               -c = comment
                               -if(!LikeComment.find_by(user_id:@user.id,comment_id:c.id))
                                 = button_to updateLikeComment_url, method: :post ,class:"btn btn-link  p-0 m-0 " ,id:"btn-like" ,params: { comment_id:c.id} do
-                                  %span.bi.bi-hand-thumbs-up.img-sm{style:"font-size:0.5em"}
+                                  %span.bi.bi-hand-thumbs-up.img-sm{style:"font-size:1.5em"}
                                     -if (c.likes.count != 0)
                                       #{c.likes.count} Like this !
                                 %div{style:"margin-top:5px"}
                                   = " - #{getTime(c.updated_at)}"
                               -else
                                 = button_to updateLikeComment_url, method: :post ,class:"btn btn-link  p-0 m-0 " ,id:"btn-like" ,params: { comment_id:c.id} do
-                                  %span.bi.bi-hand-thumbs-up-fill.img-sm{style:"font-size:0.5em;color:#337ab7 ;"}
+                                  %span.bi.bi-hand-thumbs-up-fill.img-sm{style:"font-size:1.5em;color:#337ab7 ;"}
                                     -if (c.likes.count != 0)
                                       #{c.likes.count} Like this !
                                 %div{style:"margin-top:5px"}
@@ -620,15 +620,15 @@
                         -if(!Like.find_by(user_id:@user.id,post_id:p.id))
                           %a.nav-link{ }
                             = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
-                              %span.bi.bi-heart.img-sm{style:"font-size:1em"}
+                              %span.bi.bi-heart.img-sm{style:"font-size:2.5em"}
                         -else
                           %a.nav-link{ }
                             = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
-                              %span.bi.bi-heart-fill.img-sm{style:"font-size:1em;color:red ;"}
+                              %span.bi.bi-heart-fill.img-sm{style:"font-size:2.5em;color:red ;"}
                       .col.ps-0{style:"text-align:center"}
                         %a.nav-link{ }
                           = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
-                            %span.bi.bi-chat.img-sm{style:"font-size:1em"}
+                            %span.bi.bi-chat.img-sm{style:"font-size:2.5em"}
                     %hr.mt-0
                     %div.row
                       %div.col-2.mt-2
@@ -669,14 +669,14 @@
                               -c = comment
                               -if(!LikeComment.find_by(user_id:@user.id,comment_id:c.id))
                                 = button_to updateLikeComment_url, method: :post ,class:"btn btn-link  p-0 m-0 " ,id:"btn-like" ,params: { comment_id:c.id} do
-                                  %span.bi.bi-hand-thumbs-up.img-sm{style:"font-size:0.5em"}
+                                  %span.bi.bi-hand-thumbs-up.img-sm{style:"font-size:1.5em"}
                                     -if (c.likes.count != 0)
                                       #{c.likes.count} Like this !
                                 %div{style:"margin-top:5px"}
                                   = " - #{getTime(c.updated_at)}"
                               -else
                                 = button_to updateLikeComment_url, method: :post ,class:"btn btn-link  p-0 m-0 " ,id:"btn-like" ,params: { comment_id:c.id} do
-                                  %span.bi.bi-hand-thumbs-up-fill.img-sm{style:"font-size:0.5em;color:#337ab7 ;"}
+                                  %span.bi.bi-hand-thumbs-up-fill.img-sm{style:"font-size:1.5em;color:#337ab7 ;"}
                                     -if (c.likes.count != 0)
                                       #{c.likes.count} Like this !
                                 %div{style:"margin-top:5px"}
