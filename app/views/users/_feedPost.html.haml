@@ -48,15 +48,15 @@
           %span.img-sm.nav
             -if(!Like.find_by(user_id:@user.id,post_id:p.id))
               = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
-                %span.bi.bi-star.img-sm{style:"font-size:0.5em"}
+                %span.bi.bi-star.img-sm{style:"font-size:1em"}
                   #{p.likes.count}
             -else
               = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
-                %span.bi.bi-star-fill.img-sm{style:"font-size:0.5em;color:red ;"}
+                %span.bi.bi-star-fill.img-sm{style:"font-size:1em;color:red ;"}
                   #{p.likes.count}
           %span.img-sm.ms-2
             = button_tag "",class:"btn btn-link p-0 m-0 btn-comment" ,"data-bs-target":"#comment" ,"data-target-id-comment":"#{p.id}" do
-              %span.bi.bi-chat-dots.img-sm{style:"font-size:0.5em"}
+              %span.bi.bi-chat-dots.img-sm{style:"font-size:1em"}
                 #{p.comments.count}
         -if(p.likes.count != 0)
           =render(:partial =>"likeList" , :locals => {:dataLike=>p.likes,:post=>p})
@@ -147,5 +147,5 @@
       }
     })
 
-    
+
   })
