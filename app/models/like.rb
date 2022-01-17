@@ -13,7 +13,7 @@ class Like < ApplicationRecord
     query = <<-SQL
       SELECT count(*) as numberOfLike
       FROM likes
-      WHERE post_id = "#{postID}"
+      WHERE post_id = #{postID}
       GROUP BY post_id
     SQL
 
@@ -26,7 +26,7 @@ class Like < ApplicationRecord
     query = <<-SQL
       SELECT user_id as id
       FROM likes
-      WHERE post_id = "#{postID}"
+      WHERE post_id = #{postID}
     SQL
 
     result = Like.find_by_sql(query)

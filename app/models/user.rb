@@ -79,7 +79,7 @@ class User < ApplicationRecord
     query = <<-SQL
     SELECT p.*
     FROM users u,follows f ,posts p
-    WHERE f.followee_id = "#{self.id}" and p.user_id = f.following_id and u.id = "#{self.id}"
+    WHERE f.followee_id = #{self.id} and p.user_id = f.following_id and u.id = #{self.id}
     order by p.updated_at desc
     SQL
 
@@ -91,7 +91,7 @@ class User < ApplicationRecord
     query = <<-SQL
     SELECT p.*
     FROM users u , posts p
-    WHERE p.user_id = "#{self.id}" and u.id = "#{self.id}"
+    WHERE p.user_id = #{self.id} and u.id = #{self.id}
     order by p.updated_at DESC
     SQL
     result = User.find_by_sql(query)
