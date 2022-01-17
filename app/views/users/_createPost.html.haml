@@ -1,0 +1,18 @@
+%a.nav-link{href:"#" ,"data-bs-target":"#showFormCreate", "data-bs-toggle":"modal"}
+  %i.bi.bi-plus-square
+  Create post
+%div.modal.fade#showFormCreate
+  %div.modal-dialog
+    %div.modal-content
+      %div.modal-header
+        %h5.modal-title Createpost
+        %btn.btn-close{"data-bs-dismiss":"modal"}
+      %div.modal-body
+        %div.form-group
+          = simple_form_for(@create_post, method: :post, url: posts_path) do |f|
+            .form-inputs
+              = f.association :user,selected:session[:user_id],input_html: { hidden: true },label:false
+              = f.text_area :msg ,class:"form-control",label:false
+              = f.file_field :img_post ,class:"form-control mt-0 mb-2",multiple:true;
+            .form-actions
+              = f.button :submit ,class:"btn btn-success mt-2"

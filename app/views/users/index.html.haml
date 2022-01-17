@@ -1,0 +1,44 @@
+%p#notice= notice
+%h1 Listing users
+
+%table{class:"table table-striped table-hover" }
+  %thead
+    %tr
+      %th{scope:"col"}#
+      %th{scope:"col"} Name
+      %th{scope:"col"} Email
+      %th{scope:"col"}
+      %th{scope:"col"}
+      %th{scope:"col"}
+
+  %tbody
+    - c = 1
+    - @users.each do |user|
+      %tr
+        %th{scope:"row"}= c
+        %td= user.name
+        %td= user.email
+        %td= link_to 'Show', user
+        %td= link_to 'Edit', edit_user_path(user)
+        %td= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' }
+        -c = c+1
+
+
+%a{class:"btn btn-secondary btn-sm" ,href:new_user_path,style:"color:white"} New User
+-# %a{class:"btn btn-secondary btn-sm" ,href:destroy_all_path,style:"color:white;margin-left:5px", method: :get , data: { confirm: 'Are you sure?' }} Destroy all of user
+
+/ Button trigger modal
+%a{class:"btn btn-secondary btn-sm","data-bs-target" => "#exampleModal", "data-bs-toggle" => "modal", style:"color:white;margin-left:5px;"}
+  Destroy all of user
+/ Modal
+#exampleModal.modal.fade{"aria-hidden" => "true", "aria-labelledby" => "exampleModalLabel", :tabindex => "-1"}
+  .modal-dialog
+    .modal-content
+      .modal-header
+        %h5#exampleModalLabel.modal-title Destroy all of user
+        %button.btn-close{"aria-label" => "Close", "data-bs-dismiss" => "modal", :type => "button"}
+      .modal-body
+        Are you sure?
+      .modal-footer
+        %a{class:"btn btn-secondary btn-sm","data-bs-dismiss" => "modal"} Close
+        %a{class:"btn btn-secondary btn-sm" ,href:destroy_all_path,style:"color:white;margin-left:5px", method: :get } OK!

@@ -1,0 +1,69 @@
+//comment
+%div{id:"comment#{p.id}" ,class:"targetComment hidden" }
+  %div.row.mt-2
+    %div.col.col-1
+    %div.col.col-11{style:"background-color:#f9f9f9"}
+      %div.row
+        %div.col-1.mt-2
+          %a.nav-link.p-0.m-0{href:"/profile/#{u.name}" }
+            =image_tag @user.avatar,class:"img-comment rounded-circle"
+
+        %div.col-11.mt-3.p-0
+
+          %div.form-group
+
+            = simple_form_for(@comment, method: :post, url: createComment_url ,id:"submit-comment") do |f|
+
+              .form-inputs
+                = f.input :comment_post,label:false,placeholder:"type text"  ,input_html:{class:"enter-comment",'data-post-id':"#{p.id}"},hint:"click enter for comment"
+                = f.input :post_id ,input_html: { value: "#{p.id}" },label:false , readonly:true ,as: :hidden
+                = f.input :user_id ,input_html: { value: "#{@user.id}" },label:false ,readonly:true ,as: :hidden
+              .form-actions
+                = f.button :submit ,class:"btn btn-success mt-2 mb-1 ",value:"comment", id: "enter-submit-comment#{p.id}" ,hidden:""
+
+  -p.match_comments.all.each do |c|
+    -user_comment = c.user
+    %div.row
+      %div.col.col-1
+      %div.col.col-11{style:"background-color:#f9f9f9"}
+
+        %div.row
+          %div.col-1.mt-2
+            %a.nav-link.p-0.m-0{href:"/profile/#{u.name}" }
+              =image_tag user_comment.avatar,class:"img-comment rounded-circle"
+          %div.col-10.mt-3.p-0
+            %a.nav-link.p-0.m-0.d-inline{href:"/profile/#{u.name}" }
+              %h6.d-inline #{user_comment.name}
+            %p.mb-1{id:"comment-comment-#{c.id}"} #{c.comment_post}
+
+            //edit comment
+            =render(:partial =>"editFeedComment" , :locals => {:u=>u,:c=>c,:p=>p})
+
+            %div.small.text-muted.mb-1.5.d-flex
+              %span.img-sm.nav
+                -if(!LikeComment.find_by(user_id:@user.id,comment_id:c.id))
+                  = button_to updateLikeComment_url, method: :post ,class:"btn btn-link  p-0 m-0 " ,id:"btn-like" ,params: { comment_id:c.id} do
+                    %span.bi.bi-hand-thumbs-up.img-sm{style:"font-size:0.5em"}
+                      -if (c.likes.count != 0)
+                        #{c.likes.count} Like this !
+                  %div{style:"margin-top:5px"}
+                    = " - #{getTime(c.updated_at)}"
+                -else
+                  = button_to updateLikeComment_url, method: :post ,class:"btn btn-link  p-0 m-0 " ,id:"btn-like" ,params: { comment_id:c.id} do
+                    %span.bi.bi-hand-thumbs-up-fill.img-sm{style:"font-size:0.5em;color:#337ab7 ;"}
+                      -if (c.likes.count != 0)
+                        #{c.likes.count} Like this !
+                  %div{style:"margin-top:5px"}
+                    = " - #{getTime(c.updated_at)}"
+
+          -if(user_comment.id == session[:user_id])
+            %div.col-1.mt-3.p-0
+              %i.bi.bi-three-dots.menu-threedots.fs-6{"data-bs-toggle":"dropdown" }
+              .dropdown-menu
+                = button_to destroy_url, method: :delete ,class:"btn-link dropdown-item destroyComment" ,params: { id:c.id },data: {confirm: "Are you sure you want to delete the comment?" } do
+                  %p.p-0.m-0
+                    delete comment
+                    %i.bi.bi-trash.ms-2
+                %p.mb-0.dropdown-item.btn-edit-comment{class:"btn-edit-comment" , :"btn-edit-comment" => "#{c.id}"}
+                  edit comment
+                  %i.bi.bi-pencil.ms-2

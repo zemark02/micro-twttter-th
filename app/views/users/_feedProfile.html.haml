@@ -1,0 +1,10 @@
+%div.card.border.border-0.mt-4
+  %div
+    %center{class:"show",id:"xxx",yyy:@user.to_json}
+      = image_tag @user.avatar, disabled:true , style:"width:15em;height:15em;",class:"card-img-top rounded-circle"
+
+    %div#ccc
+
+  %div.card-body.mt-4
+    %h4.card-title Name: #{@user.name}
+    %h6.card-text Mail: #{@user.email}

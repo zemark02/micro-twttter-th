@@ -1,0 +1,694 @@
+%p.mb-1.5.mt-1{id:"post-msg-#{p.id}" ,style:"font-size:15px"}#{p.msg}
+%div.container.contentPost.m-0.p-0
+
+
+  //edit post
+  =render(:partial =>"editFeedPost" , :locals => {:u=>u,:p=>p})
+
+  -if(p.img_post.attached?)
+    -if(p.img_post.all.count > 4)
+      %div.container{"data-bs-target":"#showModalPost#{p.id}" ,"data-bs-toggle":"modal"}
+        - count_img = 1
+        %div.row
+          -p.img_post.all.each do |img|
+            -if(count_img == 3)
+              %div.w-100
+              %div.col.p-1
+                =image_tag img ,style:"width:24em;height:15em;"
+            -else
+              -if(count_img == 4)
+                %div.col.p-1.block-pic-fourth
+                  =image_tag img ,style:"width:24em;height:15em;"
+                  %div.txt-left-pic
+                    %h1{style:"font-size:45px"}
+                      = "+#{p.img_post.all.count - 4}"
+                -break
+              -else
+                %div.col.p-1
+                  =image_tag img ,style:"width:24em;height:15em;"
+            -count_img = count_img + 1
+
+      .modal.fade{id:"showModalPost#{p.id}"}
+        .modal-dialog.modal-fullscreen
+          .modal-content{style:"background-color: #fafafa;"}
+            .modal-header
+              %h5.modal-title Post
+              %button.btn-close{"data-bs-dismiss" => "modal"}
+            .modal-body
+              %div.container-fluid
+                %div.row
+                  %div.col-9.border-end
+                    %div.carousel.slide{id:"slider#{p.id}" ,"data-bs-ride":"carousel"}
+                      %ol.carousel-indicators
+                        -(0..p.img_post.all.count-1).each do |s|
+                          -if(s == 0)
+                            %btn.active{"data-bs-target"=> "#slider#{p.id}", "data-bs-slide-to"=>"0"}
+                          -else
+                            %btn{"data-bs-slide-to" => "#{s}", "data-bs-target" => "#slider#{p.id}"}
+                      %div.carousel-inner
+                        - check_active = 0
+                        -p.img_post.all.each do |img|
+                          -if(check_active == 0)
+                            %div.carousel-item.active
+                              =image_tag img ,style:"width:82rem;height:46rem;"
+                          -else
+                            %div.carousel-item
+                              =image_tag img ,style:"width:82rem;height:46rem;"
+                          -check_active = check_active+1
+                      %btn.carousel-control-prev{"data-bs-slide"=>"prev" ,"data-bs-target"=>"#slider#{p.id}"}
+                        %span.carousel-control-prev-icon
+                      %btn.carousel-control-next{"data-bs-slide"=>"next" ,"data-bs-target"=>"#slider#{p.id}"}
+                        %span.carousel-control-next-icon
+                  %div.col-3
+                    %div.row
+                      %div.col.col-2.ps-0.pe-0
+                        %a.nav-link{href:"/profile/#{u.name}"}
+                          = image_tag u.avatar, disabled:true , style:"width:50px;height:50px;",class:"rounded-circle"
+                      %div.col.col-10.pt-2.ps-1{style:"position:relative"}
+
+                        %a.nav-link.p-0.m-0.d-inline-block.mt-2.p-0{href:"/profile/#{u.name}" }
+                          %h4 #{u.name}
+                        %div.d-inline-block.p-0{style:"position:absolute;margin-top:12px;"}
+                          %i.bi.bi-clock.small.ms-2.mt-0.img-sm
+                          %span.img-sm
+                            =getTime(p.updated_at)
+                    %div.row.mt-3
+                      %div.ms-2
+                        %p.fs-6 #{p.msg}
+                        -if(p.likes.count != 0)
+                          %button.btn.btn-link.showlike.btn-sm.btn-inside-view-like-list{post_id:"#{p.id}" }
+                            %i.bi.bi-emoji-smile.fs-7
+                            click to view like list
+
+                    %hr.mb-0
+                    %div.row
+                      .col.pe-0{style:"text-align:center"}
+                        -if(!Like.find_by(user_id:@user.id,post_id:p.id))
+                          %a.nav-link{ }
+                            = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
+                              %span.bi.bi-heart.img-sm{style:"font-size:1em"}
+                        -else
+                          %a.nav-link{ }
+                            = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
+                              %span.bi.bi-heart-fill.img-sm{style:"font-size:1em;color:red ;"}
+                      .col.ps-0{style:"text-align:center"}
+                        %a.nav-link{ }
+                          = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
+                            %span.bi.bi-chat.img-sm{style:"font-size:1em"}
+                    %hr.mt-0
+                    %div.row
+                      %div.col-2.mt-2
+                        %a.nav-link.p-0.m-0{href:"/profile/#{u.name}" }
+                          =image_tag @user.avatar,class:"rounded-circle",style:"width:43px;height:43px"
+
+                      %div.col-10.mt-2.p-0
+
+                        %div.form-group
+
+                          = simple_form_for(@comment, method: :post, url: createComment_url ,id:"submit-comment") do |f|
+
+                            .form-inputs
+                              = f.input :comment_post,label:false,placeholder:"type text"  ,input_html:{class:"enter-comment",'data-post-id':"#{p.id}"},hint:"click enter for comment"
+                              = f.input :post_id ,input_html: { value: "#{p.id}" },label:false , readonly:true ,as: :hidden
+                              = f.input :user_id ,input_html: { value: "#{@user.id}" },label:false ,readonly:true ,as: :hidden
+                            .form-actions
+                              = f.button :submit ,class:"btn btn-success mt-2 mb-1 ",value:"comment", id: "enter-submit-comment#{p.id}" ,hidden:""
+
+                    -p.match_comments.all.each do |comment|
+                      %div.row
+                        %div.col.col-2.ps-0.pe-0
+                          %a.nav-link{href:"/profile/#{comment.user.name}" }
+                            = image_tag comment.user.avatar, disabled:true , style:"width:40px;height:40px;",class:"rounded-circle"
+                        %div.col.col-10.pt-2.ps-1{style:"position:relative"}
+
+                          %a.nav-link.p-0.m-0.d-inline-block.mt-2.p-0{href:"/profile/#{comment.user.name}" }
+                            %h5 #{comment.user.name}
+                          %div.d-inline-block.p-0{style:"position:absolute;margin-top:12px;"}
+                            %i.bi.bi-clock.small.ms-2.mt-0.img-sm
+                            %span.img-sm
+                              =getTime(comment.updated_at)
+                      %div.row.mt-2.border-bottom
+                        %div.ms-2
+                          %p.fs-6.mb-0 #{comment.comment_post}
+                          %div.small.text-muted.mb-1.5.d-flex.mt-0
+                            %span.img-sm.nav
+                              -c = comment
+                              -if(!LikeComment.find_by(user_id:@user.id,comment_id:c.id))
+                                = button_to updateLikeComment_url, method: :post ,class:"btn btn-link  p-0 m-0 " ,id:"btn-like" ,params: { comment_id:c.id} do
+                                  %span.bi.bi-hand-thumbs-up.img-sm{style:"font-size:0.5em"}
+                                    -if (c.likes.count != 0)
+                                      #{c.likes.count} Like this !
+                                %div{style:"margin-top:5px"}
+                                  = " - #{getTime(c.updated_at)}"
+                              -else
+                                = button_to updateLikeComment_url, method: :post ,class:"btn btn-link  p-0 m-0 " ,id:"btn-like" ,params: { comment_id:c.id} do
+                                  %span.bi.bi-hand-thumbs-up-fill.img-sm{style:"font-size:0.5em;color:#337ab7 ;"}
+                                    -if (c.likes.count != 0)
+                                      #{c.likes.count} Like this !
+                                %div{style:"margin-top:5px"}
+                                  = " - #{getTime(c.updated_at)}"
+
+
+
+
+
+
+
+
+
+
+
+
+    -if(p.img_post.all.count == 4)
+      %div.container{"data-bs-target":"#showModalPost#{p.id}" ,"data-bs-toggle":"modal"}
+        - count_img = 1
+        %div.row
+          -p.img_post.all.each do |img|
+            -if(count_img == 3)
+              %div.w-100
+              %div.col.p-1
+                =image_tag img ,style:"width:24em;height:15em;"
+            -else
+              %div.col.p-1
+                =image_tag img ,style:"width:24em;height:15em;"
+            -count_img = count_img + 1
+
+      .modal.fade{id:"showModalPost#{p.id}"}
+        .modal-dialog.modal-fullscreen
+          .modal-content{style:"background-color: #fafafa;"}
+            .modal-header
+              %h5.modal-title Post
+              %button.btn-close{"data-bs-dismiss" => "modal"}
+            .modal-body
+              %div.container-fluid
+                %div.row
+                  %div.col-9.border-end
+                    %div.carousel.slide{id:"slider#{p.id}" ,"data-bs-ride":"carousel"}
+                      %ol.carousel-indicators
+                        -(0..p.img_post.all.count-1).each do |s|
+                          -if(s == 0)
+                            %btn.active{"data-bs-target"=> "#slider#{p.id}", "data-bs-slide-to"=>"0"}
+                          -else
+                            %btn{"data-bs-slide-to" => "#{s}", "data-bs-target" => "#slider#{p.id}"}
+                      %div.carousel-inner
+                        - check_active = 0
+                        -p.img_post.all.each do |img|
+                          -if(check_active == 0)
+                            %div.carousel-item.active
+                              =image_tag img ,style:"width:82rem;height:46rem;"
+                          -else
+                            %div.carousel-item
+                              =image_tag img ,style:"width:82rem;height:46rem;"
+                          -check_active = check_active+1
+                      %btn.carousel-control-prev{"data-bs-slide"=>"prev" ,"data-bs-target"=>"#slider#{p.id}"}
+                        %span.carousel-control-prev-icon
+                      %btn.carousel-control-next{"data-bs-slide"=>"next" ,"data-bs-target"=>"#slider#{p.id}"}
+                        %span.carousel-control-next-icon
+                  %div.col-3
+                    %div.row
+                      %div.col.col-2.ps-0.pe-0
+                        %a.nav-link{href:"/profile/#{u.name}"}
+                          = image_tag u.avatar, disabled:true , style:"width:50px;height:50px;",class:"rounded-circle"
+                      %div.col.col-10.pt-2.ps-1{style:"position:relative"}
+
+                        %a.nav-link.p-0.m-0.d-inline-block.mt-2.p-0{href:"/profile/#{u.name}" }
+                          %h4 #{u.name}
+                        %div.d-inline-block.p-0{style:"position:absolute;margin-top:12px;"}
+                          %i.bi.bi-clock.small.ms-2.mt-0.img-sm
+                          %span.img-sm
+                            =getTime(p.updated_at)
+                    %div.row.mt-3
+                      %div.ms-2
+                        %p.fs-6 #{p.msg}
+                        -if(p.likes.count != 0)
+                          %button.btn.btn-link.showlike.btn-sm.btn-inside-view-like-list{post_id:"#{p.id}" }
+                            %i.bi.bi-emoji-smile.fs-7
+                            click to view like list
+
+                    %hr.mb-0
+                    %div.row
+                      .col.pe-0{style:"text-align:center"}
+                        -if(!Like.find_by(user_id:@user.id,post_id:p.id))
+                          %a.nav-link{ }
+                            = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
+                              %span.bi.bi-heart.img-sm{style:"font-size:1em"}
+                        -else
+                          %a.nav-link{ }
+                            = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
+                              %span.bi.bi-heart-fill.img-sm{style:"font-size:1em;color:red ;"}
+                      .col.ps-0{style:"text-align:center"}
+                        %a.nav-link{ }
+                          = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
+                            %span.bi.bi-chat.img-sm{style:"font-size:1em"}
+                    %hr.mt-0
+                    %div.row
+                      %div.col-2.mt-2
+                        %a.nav-link.p-0.m-0{href:"/profile/#{u.name}" }
+                          =image_tag @user.avatar,class:"rounded-circle",style:"width:43px;height:43px"
+
+                      %div.col-10.mt-2.p-0
+
+                        %div.form-group
+
+                          = simple_form_for(@comment, method: :post, url: createComment_url ,id:"submit-comment") do |f|
+
+                            .form-inputs
+                              = f.input :comment_post,label:false,placeholder:"type text"  ,input_html:{class:"enter-comment",'data-post-id':"#{p.id}"},hint:"click enter for comment"
+                              = f.input :post_id ,input_html: { value: "#{p.id}" },label:false , readonly:true ,as: :hidden
+                              = f.input :user_id ,input_html: { value: "#{@user.id}" },label:false ,readonly:true ,as: :hidden
+                            .form-actions
+                              = f.button :submit ,class:"btn btn-success mt-2 mb-1 ",value:"comment", id: "enter-submit-comment#{p.id}" ,hidden:""
+
+                    -p.match_comments.all.each do |comment|
+                      %div.row
+                        %div.col.col-2.ps-0.pe-0
+                          %a.nav-link{href:"/profile/#{comment.user.name}" }
+                            = image_tag comment.user.avatar, disabled:true , style:"width:40px;height:40px;",class:"rounded-circle"
+                        %div.col.col-10.pt-2.ps-1{style:"position:relative"}
+
+                          %a.nav-link.p-0.m-0.d-inline-block.mt-2.p-0{href:"/profile/#{comment.user.name}" }
+                            %h5 #{comment.user.name}
+                          %div.d-inline-block.p-0{style:"position:absolute;margin-top:12px;"}
+                            %i.bi.bi-clock.small.ms-2.mt-0.img-sm
+                            %span.img-sm
+                              =getTime(comment.updated_at)
+                      %div.row.mt-2.border-bottom
+                        %div.ms-2
+                          %p.fs-6.mb-0 #{comment.comment_post}
+                          %div.small.text-muted.mb-1.5.d-flex.mt-0
+                            %span.img-sm.nav
+                              -c = comment
+                              -if(!LikeComment.find_by(user_id:@user.id,comment_id:c.id))
+                                = button_to updateLikeComment_url, method: :post ,class:"btn btn-link  p-0 m-0 " ,id:"btn-like" ,params: { comment_id:c.id} do
+                                  %span.bi.bi-hand-thumbs-up.img-sm{style:"font-size:0.5em"}
+                                    -if (c.likes.count != 0)
+                                      #{c.likes.count} Like this !
+                                %div{style:"margin-top:5px"}
+                                  = " - #{getTime(c.updated_at)}"
+                              -else
+                                = button_to updateLikeComment_url, method: :post ,class:"btn btn-link  p-0 m-0 " ,id:"btn-like" ,params: { comment_id:c.id} do
+                                  %span.bi.bi-hand-thumbs-up-fill.img-sm{style:"font-size:0.5em;color:#337ab7 ;"}
+                                    -if (c.likes.count != 0)
+                                      #{c.likes.count} Like this !
+                                %div{style:"margin-top:5px"}
+                                  = " - #{getTime(c.updated_at)}"
+
+
+    -if(p.img_post.all.count == 3)
+      %div.container{"data-bs-target":"#showModalPost#{p.id}" ,"data-bs-toggle":"modal"}
+        - count_img = 1
+        %div.row
+          -p.img_post.all.each do |img|
+            -if(count_img == 3)
+              %div.w-100
+              %div.col.p-1
+                =image_tag img ,style:"width:49em;height:25em;"
+            -else
+              %div.col.p-1
+                =image_tag img ,style:"width:24em;height:15em;"
+            -count_img = count_img + 1
+      .modal.fade{id:"showModalPost#{p.id}"}
+        .modal-dialog.modal-fullscreen
+          .modal-content{style:"background-color: #fafafa;"}
+            .modal-header
+              %h5.modal-title Post
+              %button.btn-close{"data-bs-dismiss" => "modal"}
+            .modal-body
+              %div.container-fluid
+                %div.row
+                  %div.col-9.border-end
+                    %div.carousel.slide{id:"slider#{p.id}" ,"data-bs-ride":"carousel"}
+                      %ol.carousel-indicators
+                        -(0..p.img_post.all.count-1).each do |s|
+                          -if(s == 0)
+                            %btn.active{"data-bs-target"=> "#slider#{p.id}", "data-bs-slide-to"=>"0"}
+                          -else
+                            %btn{"data-bs-slide-to" => "#{s}", "data-bs-target" => "#slider#{p.id}"}
+                      %div.carousel-inner
+                        - check_active = 0
+                        -p.img_post.all.each do |img|
+                          -if(check_active == 0)
+                            %div.carousel-item.active
+                              =image_tag img ,style:"width:82rem;height:46rem;"
+                          -else
+                            %div.carousel-item
+                              =image_tag img ,style:"width:82rem;height:46rem;"
+                          -check_active = check_active+1
+                      %btn.carousel-control-prev{"data-bs-slide"=>"prev" ,"data-bs-target"=>"#slider#{p.id}"}
+                        %span.carousel-control-prev-icon
+                      %btn.carousel-control-next{"data-bs-slide"=>"next" ,"data-bs-target"=>"#slider#{p.id}"}
+                        %span.carousel-control-next-icon
+                  %div.col-3
+                    %div.row
+                      %div.col.col-2.ps-0.pe-0
+                        %a.nav-link{href:"/profile/#{u.name}"}
+                          = image_tag u.avatar, disabled:true , style:"width:50px;height:50px;",class:"rounded-circle"
+                      %div.col.col-10.pt-2.ps-1{style:"position:relative"}
+
+                        %a.nav-link.p-0.m-0.d-inline-block.mt-2.p-0{href:"/profile/#{u.name}" }
+                          %h4 #{u.name}
+                        %div.d-inline-block.p-0{style:"position:absolute;margin-top:12px;"}
+                          %i.bi.bi-clock.small.ms-2.mt-0.img-sm
+                          %span.img-sm
+                            =getTime(p.updated_at)
+                    %div.row.mt-3
+                      %div.ms-2
+                        %p.fs-6 #{p.msg}
+                        -if(p.likes.count != 0)
+                          %button.btn.btn-link.showlike.btn-sm.btn-inside-view-like-list{post_id:"#{p.id}"}
+                            %i.bi.bi-emoji-smile.fs-7
+                            click to view like list
+
+                    %hr.mb-0
+                    %div.row
+                      .col.pe-0{style:"text-align:center"}
+                        -if(!Like.find_by(user_id:@user.id,post_id:p.id))
+                          %a.nav-link{ }
+                            = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
+                              %span.bi.bi-heart.img-sm{style:"font-size:1em"}
+                        -else
+                          %a.nav-link{ }
+                            = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
+                              %span.bi.bi-heart-fill.img-sm{style:"font-size:1em;color:red ;"}
+                      .col.ps-0{style:"text-align:center"}
+                        %a.nav-link{ }
+                          = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
+                            %span.bi.bi-chat.img-sm{style:"font-size:1em"}
+                    %hr.mt-0
+                    %div.row
+                      %div.col-2.mt-2
+                        %a.nav-link.p-0.m-0{href:"/profile/#{u.name}" }
+                          =image_tag @user.avatar,class:"rounded-circle",style:"width:43px;height:43px"
+
+                      %div.col-10.mt-2.p-0
+
+                        %div.form-group
+
+                          = simple_form_for(@comment, method: :post, url: createComment_url ,id:"submit-comment") do |f|
+
+                            .form-inputs
+                              = f.input :comment_post,label:false,placeholder:"type text"  ,input_html:{class:"enter-comment",'data-post-id':"#{p.id}"},hint:"click enter for comment"
+                              = f.input :post_id ,input_html: { value: "#{p.id}" },label:false , readonly:true ,as: :hidden
+                              = f.input :user_id ,input_html: { value: "#{@user.id}" },label:false ,readonly:true ,as: :hidden
+                            .form-actions
+                              = f.button :submit ,class:"btn btn-success mt-2 mb-1 ",value:"comment", id: "enter-submit-comment#{p.id}" ,hidden:""
+
+                    -p.match_comments.all.each do |comment|
+                      %div.row
+                        %div.col.col-2.ps-0.pe-0
+                          %a.nav-link{href:"/profile/#{comment.user.name}" }
+                            = image_tag comment.user.avatar, disabled:true , style:"width:40px;height:40px;",class:"rounded-circle"
+                        %div.col.col-10.pt-2.ps-1{style:"position:relative"}
+
+                          %a.nav-link.p-0.m-0.d-inline-block.mt-2.p-0{href:"/profile/#{comment.user.name}" }
+                            %h5 #{comment.user.name}
+                          %div.d-inline-block.p-0{style:"position:absolute;margin-top:12px;"}
+                            %i.bi.bi-clock.small.ms-2.mt-0.img-sm
+                            %span.img-sm
+                              =getTime(comment.updated_at)
+                      %div.row.mt-2.border-bottom
+                        %div.ms-2
+                          %p.fs-6.mb-0 #{comment.comment_post}
+                          %div.small.text-muted.mb-1.5.d-flex.mt-0
+                            %span.img-sm.nav
+                              -c = comment
+                              -if(!LikeComment.find_by(user_id:@user.id,comment_id:c.id))
+                                = button_to updateLikeComment_url, method: :post ,class:"btn btn-link  p-0 m-0 " ,id:"btn-like" ,params: { comment_id:c.id} do
+                                  %span.bi.bi-hand-thumbs-up.img-sm{style:"font-size:0.5em"}
+                                    -if (c.likes.count != 0)
+                                      #{c.likes.count} Like this !
+                                %div{style:"margin-top:5px"}
+                                  = " - #{getTime(c.updated_at)}"
+                              -else
+                                = button_to updateLikeComment_url, method: :post ,class:"btn btn-link  p-0 m-0 " ,id:"btn-like" ,params: { comment_id:c.id} do
+                                  %span.bi.bi-hand-thumbs-up-fill.img-sm{style:"font-size:0.5em;color:#337ab7 ;"}
+                                    -if (c.likes.count != 0)
+                                      #{c.likes.count} Like this !
+                                %div{style:"margin-top:5px"}
+                                  = " - #{getTime(c.updated_at)}"
+
+
+    -if(p.img_post.all.count == 2)
+      %div.container{"data-bs-target":"#showModalPost#{p.id}" ,"data-bs-toggle":"modal"}
+        %div.row
+          -p.img_post.all.each do |img|
+            %div.col.p-1
+              =image_tag img ,style:"width:24em;height:15em;"
+
+      .modal.fade{id:"showModalPost#{p.id}"}
+        .modal-dialog.modal-fullscreen
+          .modal-content{style:"background-color: #fafafa;"}
+            .modal-header
+              %h5.modal-title Post
+              %button.btn-close{"data-bs-dismiss" => "modal"}
+            .modal-body
+              %div.container-fluid
+                %div.row
+                  %div.col-9.border-end
+                    %div.carousel.slide{id:"slider#{p.id}" ,"data-bs-ride":"carousel"}
+                      %ol.carousel-indicators
+                        -(0..p.img_post.all.count-1).each do |s|
+                          -if(s == 0)
+                            %btn.active{"data-bs-target"=> "#slider#{p.id}", "data-bs-slide-to"=>"0"}
+                          -else
+                            %btn{"data-bs-slide-to" => "#{s}", "data-bs-target" => "#slider#{p.id}"}
+                      %div.carousel-inner
+                        - check_active = 0
+                        -p.img_post.all.each do |img|
+                          -if(check_active == 0)
+                            %div.carousel-item.active
+                              =image_tag img ,style:"width:82rem;height:46rem;"
+                          -else
+                            %div.carousel-item
+                              =image_tag img ,style:"width:82rem;height:46rem;"
+                          -check_active = check_active+1
+                      %btn.carousel-control-prev{"data-bs-slide"=>"prev" ,"data-bs-target"=>"#slider#{p.id}"}
+                        %span.carousel-control-prev-icon
+                      %btn.carousel-control-next{"data-bs-slide"=>"next" ,"data-bs-target"=>"#slider#{p.id}"}
+                        %span.carousel-control-next-icon
+                  %div.col-3
+                    %div.row
+                      %div.col.col-2.ps-0.pe-0
+                        %a.nav-link{href:"/profile/#{u.name}"}
+                          = image_tag u.avatar, disabled:true , style:"width:50px;height:50px;",class:"rounded-circle"
+                      %div.col.col-10.pt-2.ps-1{style:"position:relative"}
+
+                        %a.nav-link.p-0.m-0.d-inline-block.mt-2.p-0{href:"/profile/#{u.name}" }
+                          %h4 #{u.name}
+                        %div.d-inline-block.p-0{style:"position:absolute;margin-top:12px;"}
+                          %i.bi.bi-clock.small.ms-2.mt-0.img-sm
+                          %span.img-sm
+                            =getTime(p.updated_at)
+                    %div.row.mt-3
+                      %div.ms-2
+                        %p.fs-6 #{p.msg}
+                        -if(p.likes.count != 0)
+                          %button.btn.btn-link.showlike.btn-sm.btn-inside-view-like-list{post_id:"#{p.id}" }
+                            %i.bi.bi-emoji-smile.fs-7
+                            click to view like list
+
+                    %hr.mb-0
+                    %div.row
+                      .col.pe-0{style:"text-align:center"}
+                        -if(!Like.find_by(user_id:@user.id,post_id:p.id))
+                          %a.nav-link{ }
+                            = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
+                              %span.bi.bi-heart.img-sm{style:"font-size:1em"}
+                        -else
+                          %a.nav-link{ }
+                            = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
+                              %span.bi.bi-heart-fill.img-sm{style:"font-size:1em;color:red ;"}
+                      .col.ps-0{style:"text-align:center"}
+                        %a.nav-link{ }
+                          = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
+                            %span.bi.bi-chat.img-sm{style:"font-size:1em"}
+                    %hr.mt-0
+                    %div.row
+                      %div.col-2.mt-2
+                        %a.nav-link.p-0.m-0{href:"/profile/#{u.name}" }
+                          =image_tag @user.avatar,class:"rounded-circle",style:"width:43px;height:43px"
+
+                      %div.col-10.mt-2.p-0
+
+                        %div.form-group
+
+                          = simple_form_for(@comment, method: :post, url: createComment_url ,id:"submit-comment") do |f|
+
+                            .form-inputs
+                              = f.input :comment_post,label:false,placeholder:"type text"  ,input_html:{class:"enter-comment",'data-post-id':"#{p.id}"},hint:"click enter for comment"
+                              = f.input :post_id ,input_html: { value: "#{p.id}" },label:false , readonly:true ,as: :hidden
+                              = f.input :user_id ,input_html: { value: "#{@user.id}" },label:false ,readonly:true ,as: :hidden
+                            .form-actions
+                              = f.button :submit ,class:"btn btn-success mt-2 mb-1 ",value:"comment", id: "enter-submit-comment#{p.id}" ,hidden:""
+
+                    -p.match_comments.all.each do |comment|
+                      %div.row
+                        %div.col.col-2.ps-0.pe-0
+                          %a.nav-link{href:"/profile/#{comment.user.name}" }
+                            = image_tag comment.user.avatar, disabled:true , style:"width:40px;height:40px;",class:"rounded-circle"
+                        %div.col.col-10.pt-2.ps-1{style:"position:relative"}
+
+                          %a.nav-link.p-0.m-0.d-inline-block.mt-2.p-0{href:"/profile/#{comment.user.name}" }
+                            %h5 #{comment.user.name}
+                          %div.d-inline-block.p-0{style:"position:absolute;margin-top:12px;"}
+                            %i.bi.bi-clock.small.ms-2.mt-0.img-sm
+                            %span.img-sm
+                              =getTime(comment.updated_at)
+                      %div.row.mt-2.border-bottom
+                        %div.ms-2
+                          %p.fs-6.mb-0 #{comment.comment_post}
+                          %div.small.text-muted.mb-1.5.d-flex.mt-0
+                            %span.img-sm.nav
+                              -c = comment
+                              -if(!LikeComment.find_by(user_id:@user.id,comment_id:c.id))
+                                = button_to updateLikeComment_url, method: :post ,class:"btn btn-link  p-0 m-0 " ,id:"btn-like" ,params: { comment_id:c.id} do
+                                  %span.bi.bi-hand-thumbs-up.img-sm{style:"font-size:0.5em"}
+                                    -if (c.likes.count != 0)
+                                      #{c.likes.count} Like this !
+                                %div{style:"margin-top:5px"}
+                                  = " - #{getTime(c.updated_at)}"
+                              -else
+                                = button_to updateLikeComment_url, method: :post ,class:"btn btn-link  p-0 m-0 " ,id:"btn-like" ,params: { comment_id:c.id} do
+                                  %span.bi.bi-hand-thumbs-up-fill.img-sm{style:"font-size:0.5em;color:#337ab7 ;"}
+                                    -if (c.likes.count != 0)
+                                      #{c.likes.count} Like this !
+                                %div{style:"margin-top:5px"}
+                                  = " - #{getTime(c.updated_at)}"
+
+    -if(p.img_post.all.count == 1)
+      %div.container{"data-bs-target":"#showModalPost#{p.id}" ,"data-bs-toggle":"modal"}
+        %div.row
+          %div.col.p-1
+            =image_tag p.img_post.first ,style:"width:49em;height:25em;"
+
+
+      .modal.fade{id:"showModalPost#{p.id}"}
+        .modal-dialog.modal-fullscreen
+          .modal-content{style:"background-color: #fafafa;"}
+            .modal-header
+              %h5.modal-title Post
+              %button.btn-close{"data-bs-dismiss" => "modal"}
+            .modal-body
+              %div.container-fluid
+                %div.row
+                  %div.col-9.border-end
+                    %div.carousel.slide{id:"slider#{p.id}" ,"data-bs-ride":"carousel"}
+                      %ol.carousel-indicators
+                        -(0..p.img_post.all.count-1).each do |s|
+                          -if(s == 0)
+                            %btn.active{"data-bs-target"=> "#slider#{p.id}", "data-bs-slide-to"=>"0"}
+                          -else
+                            %btn{"data-bs-slide-to" => "#{s}", "data-bs-target" => "#slider#{p.id}"}
+                      %div.carousel-inner
+                        - check_active = 0
+                        -p.img_post.all.each do |img|
+                          -if(check_active == 0)
+                            %div.carousel-item.active
+                              =image_tag img ,style:"width:82rem;height:46rem;"
+                          -else
+                            %div.carousel-item
+                              =image_tag img ,style:"width:82rem;height:46rem;"
+                          -check_active = check_active+1
+                      %btn.carousel-control-prev{"data-bs-slide"=>"prev" ,"data-bs-target"=>"#slider#{p.id}"}
+                        %span.carousel-control-prev-icon
+                      %btn.carousel-control-next{"data-bs-slide"=>"next" ,"data-bs-target"=>"#slider#{p.id}"}
+                        %span.carousel-control-next-icon
+                  %div.col-3
+                    %div.row
+                      %div.col.col-2.ps-0.pe-0
+                        %a.nav-link{href:"/profile/#{u.name}"}
+                          = image_tag u.avatar, disabled:true , style:"width:50px;height:50px;",class:"rounded-circle"
+                      %div.col.col-10.pt-2.ps-1{style:"position:relative"}
+
+                        %a.nav-link.p-0.m-0.d-inline-block.mt-2.p-0{href:"/profile/#{u.name}" }
+                          %h4 #{u.name}
+                        %div.d-inline-block.p-0{style:"position:absolute;margin-top:12px;"}
+                          %i.bi.bi-clock.small.ms-2.mt-0.img-sm
+                          %span.img-sm
+                            =getTime(p.updated_at)
+                    %div.row.mt-3
+                      %div.ms-2
+                        %p.fs-6 #{p.msg}
+                        -if(p.likes.count != 0)
+                          %button.btn.btn-link.showlike.btn-sm.btn-inside-view-like-list{post_id:"#{p.id}"}
+                            %i.bi.bi-emoji-smile.fs-7
+                            click to view like list
+
+                    %hr.mb-0
+                    %div.row
+                      .col.pe-0{style:"text-align:center"}
+                        -if(!Like.find_by(user_id:@user.id,post_id:p.id))
+                          %a.nav-link{ }
+                            = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
+                              %span.bi.bi-heart.img-sm{style:"font-size:1em"}
+                        -else
+                          %a.nav-link{ }
+                            = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
+                              %span.bi.bi-heart-fill.img-sm{style:"font-size:1em;color:red ;"}
+                      .col.ps-0{style:"text-align:center"}
+                        %a.nav-link{ }
+                          = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
+                            %span.bi.bi-chat.img-sm{style:"font-size:1em"}
+                    %hr.mt-0
+                    %div.row
+                      %div.col-2.mt-2
+                        %a.nav-link.p-0.m-0{href:"/profile/#{u.name}" }
+                          =image_tag @user.avatar,class:"rounded-circle",style:"width:43px;height:43px"
+
+                      %div.col-10.mt-2.p-0
+
+                        %div.form-group
+
+                          = simple_form_for(@comment, method: :post, url: createComment_url ,id:"submit-comment") do |f|
+
+                            .form-inputs
+                              = f.input :comment_post,label:false,placeholder:"type text"  ,input_html:{class:"enter-comment",'data-post-id':"#{p.id}"},hint:"click enter for comment"
+                              = f.input :post_id ,input_html: { value: "#{p.id}" },label:false , readonly:true ,as: :hidden
+                              = f.input :user_id ,input_html: { value: "#{@user.id}" },label:false ,readonly:true ,as: :hidden
+                            .form-actions
+                              = f.button :submit ,class:"btn btn-success mt-2 mb-1 ",value:"comment", id: "enter-submit-comment#{p.id}" ,hidden:""
+
+                    -p.match_comments.all.each do |comment|
+                      %div.row
+                        %div.col.col-2.ps-0.pe-0
+                          %a.nav-link{href:"/profile/#{comment.user.name}" }
+                            = image_tag comment.user.avatar, disabled:true , style:"width:40px;height:40px;",class:"rounded-circle"
+                        %div.col.col-10.pt-2.ps-1{style:"position:relative"}
+
+                          %a.nav-link.p-0.m-0.d-inline-block.mt-2.p-0{href:"/profile/#{comment.user.name}" }
+                            %h5 #{comment.user.name}
+                          %div.d-inline-block.p-0{style:"position:absolute;margin-top:12px;"}
+                            %i.bi.bi-clock.small.ms-2.mt-0.img-sm
+                            %span.img-sm
+                              =getTime(comment.updated_at)
+                      %div.row.mt-2.border-bottom
+                        %div.ms-2
+                          %p.fs-6.mb-0 #{comment.comment_post}
+                          %div.small.text-muted.mb-1.5.d-flex.mt-0
+                            %span.img-sm.nav
+                              -c = comment
+                              -if(!LikeComment.find_by(user_id:@user.id,comment_id:c.id))
+                                = button_to updateLikeComment_url, method: :post ,class:"btn btn-link  p-0 m-0 " ,id:"btn-like" ,params: { comment_id:c.id} do
+                                  %span.bi.bi-hand-thumbs-up.img-sm{style:"font-size:0.5em"}
+                                    -if (c.likes.count != 0)
+                                      #{c.likes.count} Like this !
+                                %div{style:"margin-top:5px"}
+                                  = " - #{getTime(c.updated_at)}"
+                              -else
+                                = button_to updateLikeComment_url, method: :post ,class:"btn btn-link  p-0 m-0 " ,id:"btn-like" ,params: { comment_id:c.id} do
+                                  %span.bi.bi-hand-thumbs-up-fill.img-sm{style:"font-size:0.5em;color:#337ab7 ;"}
+                                    -if (c.likes.count != 0)
+                                      #{c.likes.count} Like this !
+                                %div{style:"margin-top:5px"}
+                                  = " - #{getTime(c.updated_at)}"
+
+:javascript
+  $(document).ready(function(){
+    $(".btn-inside-view-like-list").click(function(){
+      var post_id = $(this).attr("post_id")
+      $(`.btn-view-list-list${post_id}`).focus().click();
+      console.log(post_id)
+
+
+    })
+  })

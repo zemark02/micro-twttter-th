@@ -1,0 +1,34 @@
+%p#notice= notice
+%h1 Listing posts
+%div
+  %table{id:"example" ,:style => "width:100%"}
+    %thead
+      %tr
+        %th{scope:"col"} #id
+        %th{scope:"col"} Name
+        %th{scope:"col"} Message
+        %th{scope:"col"}
+        %th{scope:"col"}
+        %th{scope:"col"}
+
+    %tbody
+      - @posts.each do |post|
+        %tr
+          %th{scope:"row"}= post.user.id
+          %td= post.user.name
+          %td= post.msg
+          %td= link_to 'Show', post
+          %td= link_to 'Edit', edit_post_path(post)
+          %td= link_to 'Destroy', post, method: :delete, data: { confirm: 'Are you sure?' }
+  %br
+    = link_to 'New Post', new_post_path,class:"btn btn-secondary btn-sm",style:"color:white"
+
+:javascript
+  $(document).ready(function(){
+      $('#example').DataTable({
+        // "paging":   false,
+        // "ordering": false,
+        // "info":     false,
+        "order": [[ 0, "asc" ]]
+    } );
+  });

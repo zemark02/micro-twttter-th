@@ -1,0 +1,19 @@
+-# frozen_string_literal: true
+%p#notice= notice
+= simple_form_for(@user) do |f|
+  = f.error_notification
+  = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+
+  .form-inputs
+
+    = f.input :name
+    = f.input :email
+    = f.input :password
+    = f.input :password_confirmation
+    %label{for:"formFileSm",class:"mt-2"}Your profile
+    = f.file_field :avatar ,class:"form-control mt-0 mb-2",label: 'your profile',id:"formFileSm"
+
+  .form-actions
+    %d-grid{class:"gap-2 d-md-flex justify-content-md-start"}
+      = f.button :submit ,{class:"btn btn-dark mt-2"}
+      %a{class:"btn btn-outline-secondary mt-2",value:"users_path" ,:href => users_path}Back to Login

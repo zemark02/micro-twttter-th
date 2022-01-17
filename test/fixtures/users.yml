@@ -1,0 +1,32 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id              :bigint           not null, primary key
+#  email           :string(255)
+#  name            :string(255)
+#  password_digest :string(255)
+#
+
+one:
+  name: MyString
+  email: MyString
+  password_digest: <%= BCrypt::Password.create('123') %>
+
+two:
+  name: MyString
+  email: MyString
+  password_digest: MyString
+
+three:
+  id: 1
+  name: "1"
+  email: "1"
+  password_digest: <%= BCrypt::Password.create('1') %>
+
+four:
+  id: 2
+  name: "2"
+  email: "2"
+  email: "2"
+  password_digest: <%= BCrypt::Password.create('2') %>

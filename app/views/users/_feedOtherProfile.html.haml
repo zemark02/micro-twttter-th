@@ -1,0 +1,22 @@
+%div.card.border.border-0.mt-4
+  %div
+    %center
+      = image_tag @other_user.avatar, disabled:true , style:"width:15em;height:15em;",class:"card-img-top rounded-circle"
+      %br
+
+      -if(session[:user_id] == @other_user.id)
+        .btn.btn-success.mt-3{style:"font-size:22px" ,disabled:true}
+          %span.bi.bi-person-check{style:"font-size:22px"}
+          My User
+      -elsif(!@check_follow)
+        = button_to setFollow_url, method: :post ,class:"btn btn-success mt-3" ,params: { name:@other_user.name } do
+          %span.bi.bi-person-plus{style:"font-size:22px"}
+          Follow
+      -else
+        = button_to setFollow_url, method: :post ,class:"btn btn-success mt-3" ,params: { name:@other_user.name } do
+          %span.bi.bi-person-check{style:"font-size:22px"}
+          UnFollow
+
+  %div.card-body.mt-4
+    %h4.card-title Name: #{@other_user.name}
+    %h6.card-text Mail: #{@other_user.email}

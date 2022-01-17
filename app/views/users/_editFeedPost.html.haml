@@ -1,0 +1,55 @@
+%div.form-group{id:"form-edit-post#{p.id}",hidden:""}
+  = simple_form_for(p, method: :patch, url: "/posts/#{p.id}") do |f|
+
+    .form-inputs
+      = f.input :msg,label:false,placeholder:"type text"  ,input_html:{'data-post-id':"#{p.id}",class:"edit-data-msg-post enter-post" ,id:"edit-data-msg#{p.id}",rows:"#{(p.msg.length.to_i/90)/2.to_i+1}"},hint:"click enter for post / press ESC for cancel"
+      = f.input :post_id ,input_html: { value: "#{p.id}" },label:false , readonly:true ,as: :hidden
+      = f.input :user_id ,input_html: { value: "#{u.id}" },label:false ,readonly:true ,as: :hidden
+
+    .form-actions
+      = f.button :submit , id: "enter-submit-post#{p.id}",hidden:""
+
+:javascript
+
+
+  $(document).ready(function(){
+
+      $(".edit-data-msg-post").removeClass("is-valid")
+
+      $(document).ready(function(){
+          $(".enter-post").keypress(function(e){
+              if(e.which == 13){
+                var post_id = $(this).attr('data-post-id');
+                $(`#enter-submit-post${post_id}`).focus().click();
+              }
+
+          })
+
+
+          $(".enter-post").on('keyup', function(e) {
+            if (e.key == "Escape"){
+              var id = $(this).attr("data-post-id")
+              $(`#form-edit-post${id}`).attr("hidden","")
+              $(`#post-msg-${id}`).show();
+              var txt = $(`#post-msg-${id}`).text()
+              $(`#edit-data-msg${id}`).val(txt)
+            }
+          });
+
+      })
+
+      $(document).ready(function(){
+        $(".btn-edit-post").click(function(){
+          var post_id = $(this).attr("btn-edit-post")
+          $(`#form-edit-post${post_id}`).removeAttr("hidden")
+          $(`#post-msg-${post_id}`).hide();
+          $(`#edit-data-msg${post_id}`).focus()
+
+          })
+
+
+      })
+
+
+
+  })

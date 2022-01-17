@@ -1,0 +1,22 @@
+%button.btn.btn-link.showlike.btn-sm#viewLikeList{"data-bs-target":"#showNameLike#{post.id}" ,class:"p-0 m-0 btn-view-list-list#{post.id}",type: "button" ,"data-bs-toggle" => "modal" }
+  %i.bi.bi-emoji-smile.fs-7
+  click to view like list
+%div.modal.fade{id:"showNameLike#{post.id}"}
+  %div.modal-dialog
+    %div.modal-content
+      %div.modal-header
+        %h5.modal-title like list
+        %btn.btn-close{"data-bs-dismiss":"modal"}
+      %div.modal-body#content-like
+        -c = 1
+        -dataLike.each do |f|
+          %div.border.border-1.p-2
+
+            %a.nav-link{href:"/profile/#{f.name}"}
+              %h6.d-inline.me-4 #{c}.
+              = image_tag User.find_by_name([f.name]).avatar, disabled:true , style:"width:4em;height:4em;",class:"rounded-circle"
+              %p.fs-6.d-inline.ms-2
+                #{f.name}
+              -if(Follow.find_by(followee_id:session[:user_id] , following_id:f.id))
+                %i.bi.bi-person-check-fill.fs-5.ms-2{style:"color:green"}
+            -c = c + 1

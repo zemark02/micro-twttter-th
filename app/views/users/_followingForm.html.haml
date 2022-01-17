@@ -1,0 +1,25 @@
+%a.nav-link{:href => "#" ,"data-bs-target":"#showFollowing", "data-bs-toggle":"modal"}
+  %i.bi.bi-person
+  Following
+%div.modal.fade#showFollowing
+  %div.modal-dialog
+    %div.modal-content
+      %div.modal-header
+        %h5.modal-title Following
+        %btn.btn-close{"data-bs-dismiss":"modal"}
+      %div.modal-body
+        -c = 1
+        -@following.each do |f|
+          -if(session[:user_id] == f.id)
+            -next
+          %div.border.border-1.p-2
+
+            %a.nav-link{href:"/profile/#{f.name}"}
+              %h6.d-inline.me-4 #{c}.
+              = image_tag User.find_by_name([f.name]).avatar, disabled:true , style:"width:4em;height:4em;",class:"rounded-circle"
+              %p.fs-6.d-inline.ms-2
+                #{f.name}
+              -if(User.find(session[:user_id]).followings.pluck("name").include?(f.name))
+                %i.bi.bi-person-check-fill.fs-5.ms-2{style:"color:green"}
+
+            -c = c + 1

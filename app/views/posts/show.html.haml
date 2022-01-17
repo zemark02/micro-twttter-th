@@ -1,0 +1,13 @@
+%br
+
+%p#notice= notice
+%div.container.border.border-1
+  %p
+    %b User:
+    = @post.user.name
+  %p
+    %b Msg:
+    = @post.msg
+%div.container
+  = link_to 'Edit', edit_post_path(@post),class:"btn btn-secondary mt-2 ",style:"color:white"
+  = link_to 'Back', "/feed/#{session[:user_id]}" ,class:"btn btn-secondary mt-2" ,style:"color:white"

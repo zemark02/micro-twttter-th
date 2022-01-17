@@ -1,0 +1,14 @@
+%p#notice= notice
+
+= simple_form_for(@user, html: { novalidate: true }) do |f|
+  %center
+    = image_tag @user.avatar, disabled:true , style:"width:100px;height:100px;"
+
+  .form-inputs
+    = f.input :name ,disabled:true
+    = f.input :email,disabled:true
+
+
+
+%a{class:"btn btn-secondary mt-3",href:edit_user_path(@user),style:"color:white;" } Edit
+%a{class:"btn btn-secondary mt-3 ",href:"/feed/#{session[:user_id]}",style:"color:white;margin-left:5px"} Back

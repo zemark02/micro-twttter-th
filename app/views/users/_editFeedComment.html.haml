@@ -1,0 +1,55 @@
+%div.form-group{id:"form-edit-comment#{c.id}",hidden:""}
+  = simple_form_for(c, method: :patch, url: "/comments/#{c.id}") do |f|
+
+    .form-inputs
+      = f.input :comment_post,label:false,placeholder:"type text"  ,input_html:{'data-comment-id':"#{c.id}",class:"edit-data-comment enter-edit-comment" ,id:"edit-data-comment#{c.id}",rows:"#{(c.comment_post.length.to_i/90)/2.to_i+1}"},hint:"click enter for post / press ESC for cancel"
+      = f.input :post_id ,input_html: { value: "#{p.id}" },label:false , readonly:true ,as: :hidden
+      = f.input :user_id ,input_html: { value: "#{u.id}" },label:false ,readonly:true ,as: :hidden
+
+    .form-actions
+      = f.button :submit , id: "enter-to-edit-submit-comment#{c.id}",hidden:""
+
+:javascript
+
+
+  $(document).ready(function(){
+
+      $(".edit-data-comment").removeClass("is-valid")
+
+      $(document).ready(function(){
+          $(".enter-edit-comment").keypress(function(e){
+              if(e.which == 13){
+                var comment_id = $(this).attr('data-comment-id');
+                $(`#enter-to-edit-submit-comment${comment_id}`).focus().click();
+              }
+
+          })
+
+
+          $(".enter-edit-comment").on('keyup', function(e) {
+            if (e.key == "Escape"){
+              var id = $(this).attr("data-comment-id")
+              $(`#form-edit-comment${id}`).attr("hidden","")
+              $(`#comment-comment-${id}`).show();
+              var txt = $(`#comment-comment-${id}`).text()
+              $(`#edit-data-comment${id}`).val(txt);
+            }
+          });
+
+      })
+
+      $(document).ready(function(){
+        $(".btn-edit-comment").click(function(){
+          var comment_id = $(this).attr("btn-edit-comment")
+          $(`#form-edit-comment${comment_id}`).removeAttr("hidden")
+          $(`#comment-comment-${comment_id}`).hide();
+          $(`#edit-data-comment${comment_id}`).focus()
+
+          })
+
+
+      })
+
+
+
+  })

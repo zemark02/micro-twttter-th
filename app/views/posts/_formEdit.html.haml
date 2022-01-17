@@ -1,0 +1,13 @@
+%h1 Editing post
+
+= simple_form_for(@post) do |f|
+  = f.error_notification
+  = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+
+  .form-inputs
+    = f.association :user,selected:session[:user_id]
+    = f.input :msg
+
+  .form-actions
+    = f.button :submit ,class:"btn btn-secondary mt-2"
+    = link_to 'Back', "/feed/#{session[:user_id]}",class:"btn btn-secondary mt-2",style:"color:white"

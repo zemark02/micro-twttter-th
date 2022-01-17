@@ -1,0 +1,22 @@
+%nav.navbar.navbar-expand-sm.navbar-dark.bg-dark
+  / Content
+  .container-fluid
+    / Brand
+    %a.navbar-brand{:href => "/feed/#{session[:user_id]}",class:"bi bi-house-fill"}
+    %button.navbar-toggler{"data-bs-target" => "#navbarToggle", "data-bs-toggle" => "collapse"}
+      %span.navbar-toggler-icon
+    / Menu
+    #navbarToggle.collapse.navbar-collapse
+      %ul.navbar-nav
+        %li.nav-item
+          %a.nav-link{:href => "/feed/#{session[:user_id]}"}Home
+        %li.nav-item
+          %a.nav-link{href:"/users/#{session[:user_id]}"} Profile
+        %li.nav-item
+          %form.d-flex{action:"/search"}
+            %input.form-control.me-2{:placeholder => "search name", :type => "text",name:"name"}
+            %input.btn.btn-outline-secondary{:type => "button", :value => "search"  }
+
+    %ul.navbar-nav
+      %li.nav-item
+        %a.nav-link.c{href:main_path}logout

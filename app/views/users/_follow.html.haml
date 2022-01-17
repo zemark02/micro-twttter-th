@@ -1,0 +1,46 @@
+-if(check == 0)
+  %a.nav-link.showFollow{:href => "#" ,"data-bs-target":"#showFollow", "data-bs-toggle":"modal" ,"check":"#{check}","data-show-follow":following.all.to_json}
+    %i.bi.bi-person
+    Following
+-else
+  %a.nav-link.showFollow{:href => "#" ,"data-bs-target":"#showFollow", "data-bs-toggle":"modal" ,"check":"#{check}","data-show-follow":follower.all.to_json}
+    %i.bi.bi-person
+    Follower
+
+
+%div.modal.fade#showFollow
+  %div.modal-dialog
+    %div.modal-content
+      %div.modal-header
+
+      %div.modal-body#content
+
+:javascript
+  $(".showFollow").click(function(){
+    var user = $(this).attr("data-show-follow")
+    var check = $(this).attr("check")
+    var btn = "<button class=\"btn-close\" data-bs-dismiss=\"modal\"></button>"
+    user = JSON.parse(user);
+    console.log(user)
+    $(".modal-header").empty();
+    $("#content").empty();
+    if(check == 0){
+      var txt = "<h5 class=\"modal-title\">Following </h5>";
+      $(".modal-header").append(txt,btn);
+    }else{
+      var txt = "<h5 class=\"modal-title\">Follower </h5>"
+      $("div.modal-header").append(txt,btn)
+    }
+
+
+    for(var i = 0; i<user.length;i++){
+      var data = `<div class=\"border border-1 p-2\">
+                    <a class=\"nav-link\" href=\"/profile/${user[i].name}\">
+                      <h6 class=\"d-inline\">${i+1}. </h6>
+
+                      <p class=\"fs-6 d-inline ms-2\">${user[i].name} </p>
+                    </a>
+                   </div>`
+      $("#content").append(data)
+    }
+  });

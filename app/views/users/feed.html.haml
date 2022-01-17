@@ -1,0 +1,85 @@
+%br
+%br
+  %div.container
+    %div.row
+
+      %div.col.col-4.border-end
+        = render "feedProfile", object: @user
+      %div.col.col-8
+        = render "feedPost" ,object: @post
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-# %br
+-# %br
+-# %div{class:"container",href:""}
+-#   %a{href:new_post_path ,class:"btn btn-primary" ,style:"color:white"}Create post
+-# - c = 0
+-# -@post.each do |p|
+-#   %div{class:"container border border-1 m-2"}
+-#     %br
+-#     %p= link_to "name : #{User.find_by_id(p[0]).name}" ,"/profile/#{User.find_by_id(p[0]).name}"
+-#     %p= "msg : #{p[1]}"
+-#     %p{style:"margin-bottom:0.8rem;"}= "updated at : #{p[2]}"
+-#
+-#
+-#
+-#     %button.btn.btn-link.showlike.btn-sm{"data-bs-target":"#showNameModal" ,class:"p-0 showName",type: "button" ,"data-bs-toggle" => "modal" ,"data-show-like":Post.find(p[3]).likes.to_json} like = #{Post.find(p[3]).likes.count}
+-#
+-#
+-#
+-#
+-#     %hr{style:"margin:0.5rem 0;"}
+-#     %div{class:"container mb-1 ",style:"margin-left: 0px; padding-left:0px"}
+-#       -if(Like.find_by(post_id:p[3],user_id:session[:user_id]))
+-#         = button_to "Unlike", setLike_url, method: :post, params: { postID:"#{p[3]}" },class:"btn btn-info btn-sm"
+-#
+-#       -else
+-#         = button_to "Like", setLike_url, method: :post, params: { postID:"#{p[3]}" },class:"btn btn-info btn-sm"
+-#     -c = c+1
+-#
+-# .modal.fade{id:"showNameModal"}
+-#   .modal-dialog
+-#     .modal-content
+-#       .modal-header
+-#         %h5.modal-title list name
+-#         %button.btn-close{"data-bs-dismiss" => "modal"}
+-#       .modal-body
+-#
+-#         %ul.list-group.list-group-flush
+-#           %div{id:"modal-content"}
+-#
+-# :javascript
+-#   $(".showName").click(function(){
+-#     var user = $(this).attr("data-show-like")
+-#     $("#modal-content").empty();
+-#     console.log(user);
+-#     user = JSON.parse(user);
+-#     for(var i = 0 ; i < user.length;i++){
+-#       var name =  `<a href = profile/${user[i].name}> ${user[i].name} </a> <br><br>`
+-#       $("#modal-content").append(name);
+-#     }
+-#   });

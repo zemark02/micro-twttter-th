@@ -1,0 +1,151 @@
+%hr
+
+%div.nav.ps-2
+  %li.nav-item.me-2
+    =render "createPost"
+
+  %li.nav-item.me-2
+    %a.nav-link#feed{ }
+      %i.bi-card-heading
+      Feed
+  %li.nav-item.me-2
+    %a.nav-link#post{}
+      %i.bi.bi-card-checklist
+      My post
+  %li.nav-item.me-2
+    =render "followingForm"
+
+  %li.nav-item.me-2
+    = render "followerForm"
+%hr
+%div.container
+  -@feedPosts.each do |p|
+    -p = Post.find(p.id)
+    -u = User.find(p.user_id)
+    %div.row.block-post{:"data-name-user" =>"#{u.name}" ,:post_id=>"#{p.id}",:user_login_id=>"#{session[:user_id]}",:user_post_id=>"#{u.id}" ,:"data-name-login-user"=>User.find(session[:user_id]).name}
+      %div.col.col-1
+        %a.nav-link.p-0.m-0{href:"/profile/#{u.name}" }
+          = image_tag u.avatar, disabled:true , style:"width:43px;height:43px;",class:"rounded-circle"
+      %div.col.col-10.mt-2.ps-0
+        %span
+          %a.nav-link.p-0.m-0.d-inline{href:"/profile/#{u.name}" }
+            %h6.d-inline #{u.name}
+          %i.bi.bi-clock.small.ms-2.mt-0.img-sm
+          %span.img-sm
+            =getTime(p.updated_at)
+
+
+          =render(:partial => "contentPost" , :locals => {:u => u , :p => p,:@user=>@user })
+
+
+
+
+
+
+
+
+        %div.small.text-muted.mb-1.5.d-flex
+          %span.img-sm.nav
+            -if(!Like.find_by(user_id:@user.id,post_id:p.id))
+              = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
+                %span.bi.bi-star.img-sm{style:"font-size:0.5em"}
+                  #{p.likes.count}
+            -else
+              = button_to like_url, method: :post ,class:"btn btn-link  p-0 m-0" ,id:"btn-like" ,params: { postID:p.id} do
+                %span.bi.bi-star-fill.img-sm{style:"font-size:0.5em;color:red ;"}
+                  #{p.likes.count}
+          %span.img-sm.ms-2
+            = button_tag "",class:"btn btn-link p-0 m-0 btn-comment" ,"data-bs-target":"#comment" ,"data-target-id-comment":"#{p.id}" do
+              %span.bi.bi-chat-dots.img-sm{style:"font-size:0.5em"}
+                #{p.comments.count}
+        -if(p.likes.count != 0)
+          =render(:partial =>"likeList" , :locals => {:dataLike=>p.likes,:post=>p})
+      %div.col.col-1.mt-2.ps-0
+        -if(session[:user_id] == (Post.find(p.id).user).id)
+          %i.bi.bi-three-dots.menu-threedots.fs-6{"data-bs-toggle":"dropdown" }
+          .dropdown-menu
+            = button_to "/posts/#{p.id}", method: :delete ,class:"btn-link dropdown-item destroyComment" ,params: { id:p.id },data: {confirm: "Are you sure you want to delet the post?" } do
+              %p.p-0.m-0
+                delete post
+                %i.bi.bi-trash.ms-2
+            %p.mb-0.dropdown-item.btn-edit-post{class:"btn-edit-post" , :"btn-edit-post" => "#{p.id}"}
+              edit post
+              %i.bi.bi-pencil.ms-2
+
+
+
+      -# comment
+      =render(:partial =>"commentPost" , :locals => {:p=>p,:@ccomment=>@comment,:@user=>@user,:u=>u})
+
+    %hr.m-3{:"under-line-post-id"=>p.id}
+
+
+
+-# javascript action
+:javascript
+  $(document).ready(function(){
+    $(".btn-comment").click(function(){
+
+      var targetID = $(this).attr("data-target-id-comment")
+      $(`#comment${targetID}`).toggle();
+    });
+
+  })
+
+
+
+
+
+
+
+
+  $(document).ready(function(){
+      $(".enter-comment").keypress(function(e){
+          if(e.which == 13){
+            var post_id = $(this).attr('data-post-id');
+            $(`#enter-submit-comment${post_id}`).focus().click();
+          }
+      })
+  })
+
+  $(document).ready(function(){
+
+    $("#post").click(function(){
+      const all_post = document.querySelectorAll('.block-post')
+      for(var i = 0 ; i < all_post.length;i++){
+          var x = all_post[i].getAttribute("post_id");
+          var user_login_id = all_post[i].getAttribute("user_login_id")
+          var user_post_id = all_post[i].getAttribute("user_post_id")
+          if(user_login_id == user_post_id){
+            $(`div[post_id=${x}]`).show(500);
+            $(`hr[under-line-post-id=${x}]`).show(500);
+          }else{
+            $(`div[post_id=${x}]`).hide(500);
+            $(`hr[under-line-post-id=${x}]`).hide(500);
+          }
+      }
+
+    })
+
+    $("#feed").click(function(){
+      const all_post = document.querySelectorAll('.block-post')
+      for(var i = 0 ; i < all_post.length;i++){
+          var x = all_post[i].getAttribute("post_id");
+          var user_login_id = all_post[i].getAttribute("user_login_id")
+          var user_post_id = all_post[i].getAttribute("user_post_id")
+          if(user_login_id != user_post_id){
+            $(`div[post_id=${x}]`).show(500);
+            $(`hr[under-line-post-id=${x}]`).show(500);
+          }else{
+            $(`div[post_id=${x}]`).hide(500);
+            $(`hr[under-line-post-id=${x}]`).hide(500);
+          }
+
+
+
+
+      }
+    })
+
+    
+  })

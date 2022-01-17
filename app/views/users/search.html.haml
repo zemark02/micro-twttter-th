@@ -1,0 +1,12 @@
+%br
+
+%div.container
+  -if(!@user.empty?)
+    -@user.each do |u|
+      %div.border.border-1.p-2
+        %a.nav-link{href:"/profile/#{u["name"]}" }
+          = image_tag User.find_by_name(u["name"]).avatar, disabled:true , style:"width:4em;height:4em;",class:"rounded-circle"
+          %p.fs-6.d-inline.ms-2
+            #{u["name"]}
+  -else
+    %h5 Not found

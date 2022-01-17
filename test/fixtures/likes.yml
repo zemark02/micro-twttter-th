@@ -1,0 +1,15 @@
+# == Schema Information
+#
+# Table name: likes
+#
+#  post_id :integer          not null
+#  user_id :integer          not null
+#
+
+one:
+  post: one
+  user: one
+
+two:
+  post: two
+  user: two

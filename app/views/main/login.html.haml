@@ -1,0 +1,14 @@
+-# frozen_string_literal: true
+%p#notice= notice
+= simple_form_for(@user, as: :user, method: :post,url:"login") do |f|
+  = f.error_notification
+  = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+  %h1 Login
+  .form-inputs
+    = f.input :email
+    = f.input :password
+
+  .form-actions
+    = f.button :submit, 'login', {class:'btn btn-dark mt-3'}
+    %a{class:"btn btn-primary mt-3" ,style:"margin-left:4px;color:white", href:"/users/new" }Register
+    -# %button{:type => "button",class:"btn btn-primary mt-3",style:"margin-left:4px" ,href:"/users/new"} Register

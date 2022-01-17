@@ -1,0 +1,119 @@
+// Place all the styles related to the Users controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+
+.img-sm{
+  color:#6c7293;
+}
+
+a.nav-link{
+  text-decoration: none;
+}
+
+div li a i{
+  font-size:2em
+}
+
+a {
+  text-decoration: none;
+}
+button{
+  text-decoration: none;
+}
+
+#btn-like:hover{
+  background-color: #E0E0E0;
+}
+
+#btn-comment:hover{
+  background-color: #E0E0E0;
+}
+
+#btn-like ,#btn-comment{
+  text-decoration:none;
+  color:#6c7293;
+
+}
+
+.btn-comment:hover{
+  background-color: #E0E0E0;
+}
+
+.btn-close:hover{
+  cursor:pointer;
+}
+
+#checked_following{
+  color:green
+}
+
+#btn-follow{
+  text-decoration: none;
+}
+
+#removeFriend:hover{
+  cursor:pointer;
+  background-color: #E0E0E0;
+}
+.btn-link{
+  text-decoration: none;
+}
+
+.img-comment{
+  width: 35px;
+  height: 35px;
+  text-align: center;
+}
+
+.hidden{
+  display:none;
+}
+
+.destroyComment{
+  cursor:pointer;
+}
+
+.menu-threedots{
+  cursor:pointer;
+}
+
+.nav-link{
+  cursor: pointer;
+}
+.dropdown-item{
+  cursor: pointer;
+}
+
+// ------------------------------css pic------------------------------------
+
+.block-pic-fourth{
+    position: relative;
+    text-align: center;
+    color: white;
+}
+
+
+.txt-left-pic{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+}
+
+.block-pic-fourth::before{
+  content: "";
+  background: black;
+  position: absolute;
+  top:1;
+  left:1;
+  width: 97%;
+  height: 97%;
+  z-index: 1;
+  opacity: 0.4;
+}
+
+.contentPost:hover{
+  cursor: pointer;
+
+}

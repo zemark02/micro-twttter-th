@@ -1,0 +1,7 @@
+# == Schema Information
+#
+# Table name: follows
+#
+#  followee_id  :integer          not null
+#  following_id :integer          not null
+#
